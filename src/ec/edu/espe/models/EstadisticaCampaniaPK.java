@@ -11,17 +11,16 @@ import java.io.Serializable;
  *
  * @author homer
  */
-public class TargetEdadPK implements Serializable{
-
+public class EstadisticaCampaniaPK implements Serializable{
+    private Integer secCampania;
     private String ruc;
-    private Integer idTargetEdad;
 
-    public TargetEdadPK() {
+    public EstadisticaCampaniaPK() {
     }
 
-    public TargetEdadPK(String ruc, Integer idTargetEdad) {
+    public EstadisticaCampaniaPK(String ruc, Integer secCampania) {
         this.ruc = ruc;
-        this.idTargetEdad = idTargetEdad;
+        this.secCampania = secCampania;
     }
 
     public String getRuc() {
@@ -32,17 +31,11 @@ public class TargetEdadPK implements Serializable{
         this.ruc = ruc;
     }
 
-    public Integer getIdTargetEdad() {
-        return idTargetEdad;
+    public Integer getSecCampania() {
+        return secCampania;
     }
 
-    public void setIdTargetEdad(Integer idTargetEdad) {
-        this.idTargetEdad = idTargetEdad;
+    public void setSecCampania(Integer secCampania) {
+        this.secCampania = secCampania;
     }
-
-    @Override
-    public String toString() {
-        return ""+ruc + "-" + idTargetEdad;
-    }
-    
 }

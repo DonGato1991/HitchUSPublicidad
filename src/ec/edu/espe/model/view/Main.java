@@ -6,7 +6,6 @@
 package ec.edu.espe.model.view;
 
 import ec.edu.espe.models.Usuario;
-import ec.edu.espe.services.UsuarioJpaController;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,12 +18,12 @@ import javax.persistence.EntityManagerFactory;
  */
 public class Main {
     public static void main(String[] args) {
-        UsuarioJpaController usu =new UsuarioJpaController();
-        try {
-            usu.create(new Usuario(3,"correoElectronico", "password", "nombres"));
-        } catch (Exception ex) {
-            System.err.println("ERROR");
-        }
+//        UsuarioJpaController usu =new UsuarioJpaController();
+//        try {
+//            usu.create(new Usuario(3,"correoElectronico", "password", "nombres"));
+//        } catch (Exception ex) {
+//            System.err.println("ERROR");
+//        }
         
     }
    

@@ -5,8 +5,6 @@
  */
 package ec.edu.espe.model.view;
 
-import ec.edu.espe.models.Usuario;
-import ec.edu.espe.services.UsuarioJpaController;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.List;
@@ -310,14 +308,14 @@ public class GestionCampania extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void cargarDatos() {
-        UsuarioJpaController usu = new UsuarioJpaController();
-        List<Usuario> usuarios = usu.findUsuarioEntities();
-        for (int i = 0; i < jTable1.getRowCount(); i++) {
-            modelo.removeRow(i);
-        }
-        for (Usuario usuario : usuarios) {
-            modelo.addRow(new Object[]{usuario.getIdUsuario(), usuario.getCorreoElectronico(), usuario.getNombres(), usuario.getPassword(), usuario.getRuc()});
-        }
+//        UsuarioJpaController usu = new UsuarioJpaController();
+//        List<Usuario> usuarios = usu.findUsuarioEntities();
+//        for (int i = 0; i < jTable1.getRowCount(); i++) {
+//            modelo.removeRow(i);
+//        }
+//        for (Usuario usuario : usuarios) {
+//            modelo.addRow(new Object[]{usuario.getIdUsuario(), usuario.getCorreoElectronico(), usuario.getNombres(), usuario.getPassword(), usuario.getRuc()});
+//        }
     }
 
     public Image getIconImage() {

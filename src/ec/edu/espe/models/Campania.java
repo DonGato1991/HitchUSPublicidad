@@ -6,75 +6,23 @@
 package ec.edu.espe.models;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author homer
  */
-@Entity
-@Table(name = "campania")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Campania.findAll", query = "SELECT c FROM Campania c"),
-    @NamedQuery(name = "Campania.findByRuc", query = "SELECT c FROM Campania c WHERE c.campaniaPK.ruc = :ruc"),
-    @NamedQuery(name = "Campania.findBySecCampania", query = "SELECT c FROM Campania c WHERE c.campaniaPK.secCampania = :secCampania"),
-    @NamedQuery(name = "Campania.findByNombre", query = "SELECT c FROM Campania c WHERE c.nombre = :nombre"),
-    @NamedQuery(name = "Campania.findByDescripcion", query = "SELECT c FROM Campania c WHERE c.descripcion = :descripcion"),
-    @NamedQuery(name = "Campania.findByFechaCreacion", query = "SELECT c FROM Campania c WHERE c.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "Campania.findByFechaInicio", query = "SELECT c FROM Campania c WHERE c.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "Campania.findByFechaFin", query = "SELECT c FROM Campania c WHERE c.fechaFin = :fechaFin"),
-    @NamedQuery(name = "Campania.findByEstado", query = "SELECT c FROM Campania c WHERE c.estado = :estado")})
-public class Campania implements Serializable {
+public class Campania implements Serializable{
 
-    private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected CampaniaPK campaniaPK;
-    @Basic(optional = false)
-    @Column(name = "nombre")
+    private CampaniaPK campaniaPK;
     private String nombre;
-    @Basic(optional = false)
-    @Column(name = "descripcion")
     private String descripcion;
-    @Basic(optional = false)
-    @Column(name = "fecha_creacion")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @Basic(optional = false)
-    @Column(name = "fecha_inicio")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaInicio;
-    @Basic(optional = false)
-    @Column(name = "fecha_fin")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaFin;
-    @Basic(optional = false)
-    @Column(name = "estado")
     private String estado;
-    @OneToMany(mappedBy = "campania")
-    private Collection<HistorialCampania> historialCampaniaCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "campania")
-    private Collection<DetalleCampania> detalleCampaniaCollection;
-    @JoinColumn(name = "ruc", referencedColumnName = "ruc", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Empresa empresa;
-
+    private EstadisticaCampania estadisticaCampania;
     public Campania() {
     }
 
@@ -92,7 +40,7 @@ public class Campania implements Serializable {
         this.estado = estado;
     }
 
-    public Campania(String ruc, int secCampania) {
+    public Campania(String ruc, Integer secCampania) {
         this.campaniaPK = new CampaniaPK(ruc, secCampania);
     }
 
@@ -152,55 +100,11 @@ public class Campania implements Serializable {
         this.estado = estado;
     }
 
-    @XmlTransient
-    public Collection<HistorialCampania> getHistorialCampaniaCollection() {
-        return historialCampaniaCollection;
+    public EstadisticaCampania getEstadisticaCampania() {
+        return estadisticaCampania;
     }
 
-    public void setHistorialCampaniaCollection(Collection<HistorialCampania> historialCampaniaCollection) {
-        this.historialCampaniaCollection = historialCampaniaCollection;
+    public void setEstadisticaCampania(EstadisticaCampania estadisticaCampania) {
+        this.estadisticaCampania = estadisticaCampania;
     }
-
-    @XmlTransient
-    public Collection<DetalleCampania> getDetalleCampaniaCollection() {
-        return detalleCampaniaCollection;
-    }
-
-    public void setDetalleCampaniaCollection(Collection<DetalleCampania> detalleCampaniaCollection) {
-        this.detalleCampaniaCollection = detalleCampaniaCollection;
-    }
-
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (campaniaPK != null ? campaniaPK.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Campania)) {
-            return false;
-        }
-        Campania other = (Campania) object;
-        if ((this.campaniaPK == null && other.campaniaPK != null) || (this.campaniaPK != null && !this.campaniaPK.equals(other.campaniaPK))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "ec.edu.espe.models.Campania[ campaniaPK=" + campaniaPK + " ]";
-    }
-    
 }

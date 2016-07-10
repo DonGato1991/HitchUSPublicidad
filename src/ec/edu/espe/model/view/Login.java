@@ -5,10 +5,14 @@
  */
 package ec.edu.espe.model.view;
 
+import ec.edu.espe.models.Usuario;
+import ec.edu.espe.rest.client.UsuarioRestClient;
 import ec.edu.espe.util.UtilUI;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -197,12 +201,21 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void validateUser() {
+        UsuarioRestClient clientUsuario=new UsuarioRestClient();
+        List<Usuario> usuarios=Arrays.asList(clientUsuario.findAll_JSON());
+        Boolean usuarioRegistrado=false;
         if (!txtEmail.getText().isEmpty() && !txtPass.getText().isEmpty()) {
             String email = txtEmail.getText();
             String ppaswd = txtPass.getText();
+            for (Usuario usuario1 : usuarios) {
+                if(usuario1.getCorreoElectronico().compareTo(email)==0&&usuario1.getPassword().compareTo(ppaswd)==0)
+                {
+                    usuarioRegistrado=true;
+                }
+            }
             //if (UtilUI.validate(email)) {
             if (true) {
-                if (email.equals("admin") && ppaswd.equals("12345")) {
+                if (usuarioRegistrado) {
                     mainView regFace = new mainView();
                     regFace.setVisible(true);
                     dispose();

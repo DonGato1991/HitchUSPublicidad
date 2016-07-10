@@ -11,19 +11,23 @@ import java.io.Serializable;
  *
  * @author homer
  */
-public class DetalleCampaniaPK implements Serializable {
+public class SegmentoDetalleCampaniaPK implements Serializable {
 
-    private Integer idElemento;
+    private Integer idTargetEdad;
     private String ruc;
     private Integer secCampania;
+    private Integer idElemento;
+    private String tarRuc;
 
-    public DetalleCampaniaPK() {
+    public SegmentoDetalleCampaniaPK() {
     }
 
-    public DetalleCampaniaPK(String ruc, Integer secCampania, Integer idElemento) {
+    public SegmentoDetalleCampaniaPK(String ruc, Integer secCampania, Integer idElemento, String tarRuc, Integer idTargetEdad) {
         this.ruc = ruc;
         this.secCampania = secCampania;
         this.idElemento = idElemento;
+        this.tarRuc = tarRuc;
+        this.idTargetEdad = idTargetEdad;
     }
 
     public String getRuc() {
@@ -48,5 +52,21 @@ public class DetalleCampaniaPK implements Serializable {
 
     public void setIdElemento(Integer idElemento) {
         this.idElemento = idElemento;
+    }
+
+    public String getTarRuc() {
+        return tarRuc;
+    }
+
+    public void setTarRuc(String tarRuc) {
+        this.tarRuc = tarRuc;
+    }
+
+    public Integer getIdTargetEdad() {
+        return idTargetEdad;
+    }
+
+    public void setIdTargetEdad(Integer idTargetEdad) {
+        this.idTargetEdad = idTargetEdad;
     }
 }
