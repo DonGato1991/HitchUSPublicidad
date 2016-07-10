@@ -147,6 +147,7 @@ public class mainView extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         GestionUsuarios gestion = new GestionUsuarios();
+        System.out.println("Arrancar Gestion Usuarios");
         this.escritorio.add(gestion);
         gestion.show();
 

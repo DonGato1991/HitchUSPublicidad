@@ -6,8 +6,10 @@
 package ec.edu.espe.model.view;
 
 import ec.edu.espe.models.Usuario;
+import ec.edu.espe.rest.client.UsuarioRestClient;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -22,14 +24,18 @@ public class GestionUsuarios extends javax.swing.JInternalFrame {
      * Creates new form GestionUsuarios
      */
     DefaultTableModel modelo;
+    UsuarioRestClient clientUsu = new UsuarioRestClient();
+    Integer indice;
 
     public GestionUsuarios() {
         initComponents();
+
+        System.out.println("Cargar Datos");
+        cargarDatos();
         ImageIcon imagen = new ImageIcon(getClass().getResource(
                 "/ec/edu/espe/images/HitchLogo.png"));
         setFrameIcon(imagen);
-        modelo = (DefaultTableModel) jTable1.getModel();
-        //cargarDatos();
+
     }
 
     /**
@@ -194,6 +200,11 @@ public class GestionUsuarios extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
@@ -247,7 +258,21 @@ public class GestionUsuarios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtEmail1ActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        if (txtRuc.getText() != "" && txtNombre.getText() != "" && txtEmail1.getText() != "" && pssPass.getText() != "") {
+            if (txtEmail1.getText().contains("@") && txtEmail1.getText().contains(".") && txtRuc.getText().length() >= 10) {
+                Usuario usuario = new Usuario();
+                usuario.setRuc(txtRuc.getText());
+                usuario.setNombres(txtNombre.getText());
+                usuario.setCorreoElectronico(txtEmail1.getText());
+                usuario.setPassword(pssPass.getText());
+                usuario.setIdUsuario(indice);
+                clientUsu.edit_JSON(usuario, indice);
+                cargarDatos();
+            } else {
+                System.err.println("Los datos ingresados no son correctos");
+            }
+        }
+
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
@@ -260,24 +285,39 @@ public class GestionUsuarios extends javax.swing.JInternalFrame {
             esRuc = true;
         }
         if (!txtNombre.getText().isEmpty() && !pssPass.getText().isEmpty() && esCorreo && esRuc) {
-//            UsuarioJpaController usu = new UsuarioJpaController();
-//            Usuario usuario = new Usuario();
-//            usuario.setCorreoElectronico(txtEmail1.getText());
-//            usuario.setNombres(txtNombre.getText());
-//            usuario.setPassword(pssPass.getText());
-//            usuario.setRuc(txtRuc.getText());
-//            try {
-//                usu.create(usuario);
-//                cargarDatos();
-//            } catch (Exception ex) {
-//                System.err.println("Usuario no creado");
-//            }
+            UsuarioRestClient clientUsu = new UsuarioRestClient();
+            Usuario usuario = new Usuario();
+            usuario.setCorreoElectronico(txtEmail1.getText());
+            usuario.setNombres(txtNombre.getText());
+            usuario.setPassword(pssPass.getText());
+            usuario.setRuc(txtRuc.getText());
+            indice = usuario.getIdUsuario();
+            try {
+                clientUsu.create_JSON(usuario);
+                cargarDatos();
+            } catch (Exception ex) {
+                System.err.println("Usuario no creado");
+            }
         }
     }//GEN-LAST:event_btnCrearActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(indice);
+        clientUsu.remove(indice);
+        cargarDatos();
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        indice = (Integer) modelo.getValueAt(jTable1.getSelectedRow(), 0);
+        System.out.println("PK  Usuario: " + indice);
+        Usuario usuario = clientUsu.find_JSON(Usuario.class, indice);
+        txtEmail1.setText(usuario.getCorreoElectronico());
+        txtNombre.setText(usuario.getNombres());
+        txtRuc.setText(usuario.getRuc());
+        pssPass.setText(usuario.getPassword());
+
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -300,14 +340,22 @@ public class GestionUsuarios extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void cargarDatos() {
-//        UsuarioJpaController usu = new UsuarioJpaController();
-//        List<Usuario> usuarios = usu.findUsuarioEntities();
-//        for (int i = 0; i < jTable1.getRowCount(); i++) {
-//            modelo.removeRow(i);
-//        }
-//        for (Usuario usuario : usuarios) {
-//            modelo.addRow(new Object[]{usuario.getIdUsuario(), usuario.getCorreoElectronico(), usuario.getNombres(), usuario.getPassword(), usuario.getRuc()});
-//        }
+
+        modelo = (DefaultTableModel) jTable1.getModel();
+        System.out.println("Filas de la tabla " + jTable1.getRowCount());
+        for (int i = jTable1.getRowCount() - 1; i >= 0; i--) {
+            modelo.removeRow(i);
+            System.out.println("Eliminando la fila ");
+        }
+        List<Usuario> usuarios = Arrays.asList(clientUsu.findAll_JSON());
+        for (Usuario usuario : usuarios) {
+            System.out.println(usuario.toString());
+            modelo.addRow(new Object[]{usuario.getIdUsuario(), usuario.getCorreoElectronico(), usuario.getNombres(), usuario.getPassword(), usuario.getRuc()});
+        }
+        txtEmail1.setText("");
+        txtNombre.setText("");
+        txtRuc.setText("");
+        pssPass.setText("");
     }
 
     public Image getIconImage() {
