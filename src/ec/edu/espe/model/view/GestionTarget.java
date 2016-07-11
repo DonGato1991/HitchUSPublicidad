@@ -5,10 +5,10 @@
  */
 package ec.edu.espe.model.view;
 
-import ec.edu.espe.models.Usuario;
+import ec.edu.espe.models.TargetEdad;
+import ec.edu.espe.rest.client.TargetEdadRestClient;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -288,6 +288,17 @@ public class GestionTarget extends javax.swing.JInternalFrame {
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
             System.out.println("nombre:"+txtNombre.getText()+" Descripcion:"+txtDescripcion.getText()+" edadMin:"+spinnerEdadMin.getValue().toString()
             +" EdadMax:"+spinnerEdadMax.getValue().toString()+" Género:"+cbxGenero.getItemAt(cbxGenero.getSelectedIndex()));
+             TargetEdadRestClient clientTarget = new TargetEdadRestClient();
+            TargetEdad target = new TargetEdad();
+            target.setNombre(txtNombre.getText());
+
+//            indice = target.getIdUsuario();
+            try {
+                clientTarget.create_JSON(target);
+                cargarDatos();
+            } catch (Exception ex) {
+                System.err.println("Target no creado");
+            }
     }//GEN-LAST:event_btnCrearActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
