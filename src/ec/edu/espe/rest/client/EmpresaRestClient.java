@@ -57,7 +57,7 @@ public class EmpresaRestClient {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <Empresa> Empresa find_JSON(Class<Empresa> responseType,Integer id) throws ClientErrorException {
+    public <Empresa> Empresa find_JSON(Class<Empresa> responseType,String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("find/"+id);
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
@@ -98,7 +98,7 @@ public class EmpresaRestClient {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(Empresa[].class);
     }
 
-    public void remove(@PathParam("id") String id) throws ClientErrorException {
+    public void remove(String id) throws ClientErrorException {
         webTarget.path("remove/"+id)
                 .request().delete();
     }

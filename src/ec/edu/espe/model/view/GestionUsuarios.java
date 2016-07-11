@@ -29,8 +29,6 @@ public class GestionUsuarios extends javax.swing.JInternalFrame {
 
     public GestionUsuarios() {
         initComponents();
-
-        System.out.println("Cargar Datos");
         cargarDatos();
         ImageIcon imagen = new ImageIcon(getClass().getResource(
                 "/ec/edu/espe/images/HitchLogo.png"));
