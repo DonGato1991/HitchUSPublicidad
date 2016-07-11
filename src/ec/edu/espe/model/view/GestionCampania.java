@@ -62,7 +62,6 @@ public class GestionCampania extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         btnModificar = new javax.swing.JButton();
         btnCrear = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
@@ -105,14 +104,6 @@ public class GestionCampania extends javax.swing.JInternalFrame {
             }
         });
 
-        btnEliminar.setText("Eliminar");
-        btnEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
-            }
-        });
-
         jLabel6.setText("Empresa");
 
         jLabel7.setText("Nombre de Campaña");
@@ -150,8 +141,7 @@ public class GestionCampania extends javax.swing.JInternalFrame {
                         .addComponent(btnCrear)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEliminar))
+                        .addGap(79, 79, 79))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -176,7 +166,7 @@ public class GestionCampania extends javax.swing.JInternalFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dtFechaFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dtFechaFin, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
                     .addComponent(dtFechaInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(65, 65, 65))
         );
@@ -212,7 +202,6 @@ public class GestionCampania extends javax.swing.JInternalFrame {
                 .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificar)
-                    .addComponent(btnEliminar)
                     .addComponent(btnCrear))
                 .addGap(23, 23, 23))
         );
@@ -283,7 +272,36 @@ public class GestionCampania extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        if (!txtDescripcion.getText().isEmpty()&&!txtNombre.getText().isEmpty()&&(dtFechaInicio.getDate().before(dtFechaFin.getDate()))) {
+            pk=cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex());
+            CampaniaPK pK=new CampaniaPK();
+            pK.setRuc(pk.substring(pk.indexOf("-")+1,pk.length()));
+            pK.setSecCampania((Integer) modelo.getValueAt(jTable1.getSelectedRow(),0));
+            Campania campania= new Campania();
+            campania.setCampaniaPK(pK);
+            campania.setNombre(txtNombre.getText());
+            campania.setDescripcion(txtDescripcion.getText());
+            campania.setFechaCreacion(new Date());
+            campania.setFechaInicio(dtFechaInicio.getDate());
+            campania.setFechaFin(dtFechaFin.getDate());
+            if(checkActivo.isSelected())
+            {
+                campania.setEstado("A");
+            }
+            else
+            {
+                campania.setEstado("I");
+            }
+          
+            try {
+                String rucString=cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex());
+                pk = "ruc="+rucString.substring(rucString.indexOf("-")+1,rucString.length())+";secCampania="+modelo.getValueAt(jTable1.getSelectedRow(), 0);
+                clientCam.edit_JSON(campania, pk);
+                cargarDatos();
+            } catch (Exception ex) {
+                System.err.println("Empresa no modificada");
+            }
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
@@ -318,10 +336,6 @@ public class GestionCampania extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnCrearActionPerformed
 
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEliminarActionPerformed
-
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
@@ -331,20 +345,29 @@ public class GestionCampania extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_checkActivoActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-       String rucString=cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex());
-        pk = "ruc="+rucString.substring(rucString.indexOf("-")+1,rucString.length())+";secCampania="+(String) modelo.getValueAt(jTable1.getSelectedRow(), 0);
+        String rucString=cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex());
+        System.err.println("item del combo: "+rucString);
+        System.err.println(modelo.getValueAt(jTable1.getSelectedRow(), 0));
+        pk = "ruc="+rucString.substring(rucString.indexOf("-")+1,rucString.length())+";secCampania="+modelo.getValueAt(jTable1.getSelectedRow(), 0);
         System.out.println("PK  Usuario: " + pk);
         Campania campania = clientCam.find_JSON(Campania.class, pk);
+        System.out.println("Camapnia: "+campania);
         txtNombre.setText(campania.getNombre());
         txtDescripcion.setText(campania.getDescripcion());
-        
-        
+        if (campania.getEstado().compareTo("A")==0) {
+            checkActivo.setSelected(true);
+        }
+        else
+        {
+            checkActivo.setSelected(false);
+        }
+        dtFechaInicio.setDate(campania.getFechaInicio());
+        dtFechaFin.setDate(campania.getFechaFin());
     }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrear;
-    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cbxEmpresa;
     private javax.swing.JCheckBox checkActivo;
