@@ -5,8 +5,15 @@
  */
 package ec.edu.espe.model.view;
 
+import ec.edu.espe.models.Campania;
+import ec.edu.espe.models.CampaniaPK;
+import ec.edu.espe.models.Empresa;
+import ec.edu.espe.rest.client.CampaniaRestClient;
+import ec.edu.espe.rest.client.EmpresaRestClient;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -24,9 +31,17 @@ public class GestionCampania extends javax.swing.JInternalFrame {
      * Creates new form GestionUsuarios
      */
     DefaultTableModel modelo;
+    CampaniaRestClient clientCam = new CampaniaRestClient();
+    EmpresaRestClient clientEmp = new EmpresaRestClient();
+    String pk;
 
     public GestionCampania() {
         initComponents();
+        List<Empresa> empresas=Arrays.asList(clientEmp.findAll_JSON());
+        for (Empresa empresa : empresas) {
+            cbxEmpresa.addItem(empresa.getRazonSocial()+"-"+empresa.getRuc());
+        }
+        cargarDatos();
         ImageIcon imagen = new ImageIcon(getClass().getResource(
                 "/ec/edu/espe/images/HitchLogo.png"));
         setFrameIcon(imagen);
@@ -113,8 +128,6 @@ public class GestionCampania extends javax.swing.JInternalFrame {
         jLabel1.setText("Fecha Inicio");
 
         jLabel3.setText("Fecha Fin");
-
-        cbxEmpresa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel4.setText("Estado");
 
@@ -211,15 +224,20 @@ public class GestionCampania extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Email", "Nombre", "Password", "RUC"
+                "ID", "Nombre de Campaña", "Empresa", "Fecha Creación", "Fecha Inicio", "Fecha Fin", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -229,6 +247,8 @@ public class GestionCampania extends javax.swing.JInternalFrame {
             jTable1.getColumnModel().getColumn(2).setResizable(false);
             jTable1.getColumnModel().getColumn(3).setResizable(false);
             jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+            jTable1.getColumnModel().getColumn(6).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -267,8 +287,35 @@ public class GestionCampania extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-        System.out.println("Activo:"+checkActivo.isSelected()+" Empresa:"+cbxEmpresa.getSelectedItem().toString()
-        +" Descripción:"+txtDescripcion.getText()+"FechaInicio: "+dtFechaInicio.getDate()+" FechaFin:"+dtFechaFin.getDate());
+        
+        if (!txtDescripcion.getText().isEmpty()&&!txtNombre.getText().isEmpty()&&(dtFechaInicio.getDate().before(dtFechaFin.getDate()))) {
+            pk=cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex());
+            CampaniaPK pK=new CampaniaPK();
+            pK.setRuc(pk.substring(pk.indexOf("-")+1,pk.length()));
+            pK.setSecCampania(1);
+            Campania campania= new Campania();
+            campania.setCampaniaPK(pK);
+            campania.setNombre(txtNombre.getText());
+            campania.setDescripcion(txtDescripcion.getText());
+            campania.setFechaCreacion(new Date());
+            campania.setFechaInicio(dtFechaInicio.getDate());
+            campania.setFechaFin(dtFechaFin.getDate());
+            if(checkActivo.isSelected())
+            {
+                campania.setEstado("A");
+            }
+            else
+            {
+                campania.setEstado("I");
+            }
+          
+            try {
+                clientCam.create_JSON(campania);
+                cargarDatos();
+            } catch (Exception ex) {
+                System.err.println("Empresa no creada");
+            }
+        }
     }//GEN-LAST:event_btnCrearActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -282,6 +329,17 @@ public class GestionCampania extends javax.swing.JInternalFrame {
     private void checkActivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkActivoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkActivoActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+       String rucString=cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex());
+        pk = "ruc="+rucString.substring(rucString.indexOf("-")+1,rucString.length())+";secCampania="+(String) modelo.getValueAt(jTable1.getSelectedRow(), 0);
+        System.out.println("PK  Usuario: " + pk);
+        Campania campania = clientCam.find_JSON(Campania.class, pk);
+        txtNombre.setText(campania.getNombre());
+        txtDescripcion.setText(campania.getDescripcion());
+        
+        
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -308,14 +366,20 @@ public class GestionCampania extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void cargarDatos() {
-//        UsuarioJpaController usu = new UsuarioJpaController();
-//        List<Usuario> usuarios = usu.findUsuarioEntities();
-//        for (int i = 0; i < jTable1.getRowCount(); i++) {
-//            modelo.removeRow(i);
-//        }
-//        for (Usuario usuario : usuarios) {
-//            modelo.addRow(new Object[]{usuario.getIdUsuario(), usuario.getCorreoElectronico(), usuario.getNombres(), usuario.getPassword(), usuario.getRuc()});
-//        }
+        modelo = (DefaultTableModel) jTable1.getModel();
+        System.out.println("Filas de la tabla " + jTable1.getRowCount());
+        for (int i = jTable1.getRowCount() - 1; i >= 0; i--) {
+            modelo.removeRow(i);
+            System.out.println("Eliminando la fila ");
+        }
+        List<Campania> campanias = Arrays.asList(clientCam.findAll_JSON());
+        for (Campania campania : campanias) {
+            modelo.addRow(new Object[]{campania.getCampaniaPK().getSecCampania(),campania.getNombre(),clientEmp.find_JSON(Empresa.class,campania.getCampaniaPK().getRuc()).getRazonSocial(),campania.getFechaCreacion(),campania.getFechaInicio(),campania.getFechaFin(),campania.getEstado()});
+        }
+        txtDescripcion.setText("");
+        txtNombre.setText("");
+        checkActivo.setSelected(false);
+        cbxEmpresa.setSelectedIndex(0);
     }
 
     public Image getIconImage() {
