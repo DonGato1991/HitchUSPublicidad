@@ -7,6 +7,7 @@ package ec.edu.espe.model.view;
 
 import ec.edu.espe.models.Usuario;
 import ec.edu.espe.rest.client.UsuarioRestClient;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class GestionUsuarios extends javax.swing.JInternalFrame {
         ImageIcon imagen = new ImageIcon(getClass().getResource(
                 "/ec/edu/espe/images/HitchLogo.png"));
         setFrameIcon(imagen);
-
+        getContentPane().setBackground(Color.WHITE);
     }
 
     /**

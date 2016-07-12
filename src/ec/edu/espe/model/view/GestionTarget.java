@@ -5,10 +5,16 @@
  */
 package ec.edu.espe.model.view;
 
+import ec.edu.espe.models.Empresa;
 import ec.edu.espe.models.TargetEdad;
+import ec.edu.espe.models.TargetEdadPK;
+import ec.edu.espe.rest.client.EmpresaRestClient;
 import ec.edu.espe.rest.client.TargetEdadRestClient;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -24,23 +30,22 @@ public class GestionTarget extends javax.swing.JInternalFrame {
      * Creates new form GestionUsuarios
      */
     DefaultTableModel modelo;
+    Integer indice;
+    TargetEdadRestClient clientTarget = new TargetEdadRestClient();
+    EmpresaRestClient empresaRestClient = new EmpresaRestClient();
 
     public GestionTarget() {
         initComponents();
+        getContentPane().setBackground(Color.WHITE);
         ImageIcon imagen = new ImageIcon(getClass().getResource(
                 "/ec/edu/espe/images/HitchLogo.png"));
         setFrameIcon(imagen);
-//        JSpinner m_numberSpinner;
-//        SpinnerNumberModel m_numberSpinnerModel;
-//        int current = 18;
-//        int min = 18;
-//        int max = 99;
-//        int step = 1;
-//        m_numberSpinnerModel = new SpinnerNumberModel(current, min, max, step);
-//        m_numberSpinner = new JSpinner(m_numberSpinnerModel);
-//        jSpinner1 = m_numberSpinner;
+        List<Empresa> empresas = Arrays.asList(empresaRestClient.findAll_JSON());
+        for (Empresa empresa : empresas) {
+            cbxEmpresa.addItem(empresa.getRazonSocial() + "-" + empresa.getRuc());
+        }
         modelo = (DefaultTableModel) jTable1.getModel();
-        //cargarDatos();
+        cargarDatos();
     }
 
     /**
@@ -78,6 +83,8 @@ public class GestionTarget extends javax.swing.JInternalFrame {
         m_numberSpinnerModel2 = new SpinnerNumberModel(current2, min, max, step);
         spinnerEdadMax = new JSpinner(m_numberSpinnerModel2);
         cbxGenero = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        cbxEmpresa = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -142,7 +149,9 @@ public class GestionTarget extends javax.swing.JInternalFrame {
 
         lblEdadMax.setText("Edad Máxima");
 
-        cbxGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hombres", "Mujeres", "Otros" }));
+        cbxGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MASCULINO", "FEMENINO", "OTRO" }));
+
+        jLabel5.setText("Empresa ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -152,9 +161,6 @@ public class GestionTarget extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(293, 293, 293)
-                        .addComponent(btnCrear))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -163,51 +169,60 @@ public class GestionTarget extends javax.swing.JInternalFrame {
                         .addGap(23, 23, 23)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                            .addComponent(txtNombre))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(txtNombre))
+                        .addGap(52, 52, 52)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbxEmpresa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbxGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(58, 58, 58)
                         .addComponent(lbEdadMin, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(spinnerEdadMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addComponent(lblEdadMax)
                         .addGap(18, 18, 18)
-                        .addComponent(spinnerEdadMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbxGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 119, Short.MAX_VALUE))
+                        .addComponent(spinnerEdadMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(311, 311, 311)
+                        .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
                         .addComponent(btnModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEliminar)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(55, 55, 55)
+                        .addComponent(btnEliminar)))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
+                            .addComponent(cbxEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(14, 14, 14))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbEdadMin)
                             .addComponent(lblEdadMax)
                             .addComponent(spinnerEdadMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spinnerEdadMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(cbxGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(spinnerEdadMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(1, 1, 1)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(cbxGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificar)
@@ -222,11 +237,11 @@ public class GestionTarget extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Email", "Nombre", "Password", "RUC"
+                "ID", "Nombre", "Descripción", "Edad Mínima", "Edad Máxima", "Género"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -286,23 +301,36 @@ public class GestionTarget extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-            System.out.println("nombre:"+txtNombre.getText()+" Descripcion:"+txtDescripcion.getText()+" edadMin:"+spinnerEdadMin.getValue().toString()
-            +" EdadMax:"+spinnerEdadMax.getValue().toString()+" Género:"+cbxGenero.getItemAt(cbxGenero.getSelectedIndex()));
-             TargetEdadRestClient clientTarget = new TargetEdadRestClient();
-            TargetEdad target = new TargetEdad();
-            target.setNombre(txtNombre.getText());
+        System.out.println("nombre:" + txtNombre.getText() + " Descripcion:" + txtDescripcion.getText() + " edadMin:" + spinnerEdadMin.getValue().toString()
+                + " EdadMax:" + spinnerEdadMax.getValue().toString() + " Género:" + cbxGenero.getItemAt(cbxGenero.getSelectedIndex()));
 
-//            indice = target.getIdUsuario();
-            try {
-                clientTarget.create_JSON(target);
-                cargarDatos();
-            } catch (Exception ex) {
-                System.err.println("Target no creado");
-            }
+        TargetEdad target = new TargetEdad();
+        TargetEdadPK edadPK = new TargetEdadPK();
+        String[] identificacion= new String[2];
+        identificacion= cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).split("-");
+        edadPK.setRuc(identificacion[1].trim());
+        target.setTargetEdadPK(edadPK);
+        target.setNombre(txtNombre.getText());
+        target.setDescripcion(txtDescripcion.getText());
+        target.setEdadMinima(Integer.parseInt(spinnerEdadMin.getValue().toString()));
+        target.setEdadMaxima(Integer.parseInt(spinnerEdadMax.getValue().toString()));
+        String gen= cbxGenero.getItemAt(cbxGenero.getSelectedIndex()).substring(0, 3);
+        System.out.println(gen+" "+edadPK.getRuc());
+        target.setGenero(gen.toUpperCase());
+        //indice = target.getTargetEdadPK().getIdTargetEdad();
+        try {
+            clientTarget.create_JSON(target);
+            cargarDatos();
+        } catch (Exception ex) {
+            System.err.println("Target no creado");
+        }
     }//GEN-LAST:event_btnCrearActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        TargetEdad target = new TargetEdad();
+//        target.setIdUsuario(indice);
+//        clientTarget.remove(indice);
+        cargarDatos();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
 
@@ -310,11 +338,13 @@ public class GestionTarget extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
+    private javax.swing.JComboBox<String> cbxEmpresa;
     private javax.swing.JComboBox<String> cbxGenero;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -328,14 +358,25 @@ public class GestionTarget extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void cargarDatos() {
-//        UsuarioJpaController usu = new UsuarioJpaController();
-//        List<Usuario> usuarios = usu.findUsuarioEntities();
-//        for (int i = 0; i < jTable1.getRowCount(); i++) {
-//            modelo.removeRow(i);
-//        }
-//        for (Usuario usuario : usuarios) {
-//            modelo.addRow(new Object[]{usuario.getIdUsuario(), usuario.getCorreoElectronico(), usuario.getNombres(), usuario.getPassword(), usuario.getRuc()});
-//        }
+
+        modelo = (DefaultTableModel) jTable1.getModel();
+        System.out.println("Filas de la tabla " + jTable1.getRowCount());
+        for (int i = jTable1.getRowCount()-1; i >= 0; i--) {
+            modelo.removeRow(i);
+            System.out.println("Eliminando la fila ");
+        }
+        List<TargetEdad> usuarios = Arrays.asList(clientTarget.findAll_JSON());
+        for (TargetEdad usuario : usuarios) {
+            System.out.println(usuario.toString());
+            modelo.addRow(new Object[]{usuario.getTargetEdadPK().getIdTargetEdad(), usuario.getNombre(),
+                usuario.getDescripcion(), usuario.getEdadMinima(), usuario.getEdadMaxima(), usuario.getGenero()});
+        }
+        txtNombre.setText("");
+        txtDescripcion.setText("");
+        spinnerEdadMin.setValue(18);
+        spinnerEdadMax.setValue(18);
+        cbxGenero.setSelectedIndex(0);
+
     }
 
     public Image getIconImage() {
