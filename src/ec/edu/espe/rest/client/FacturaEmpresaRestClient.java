@@ -27,7 +27,8 @@ public class FacturaEmpresaRestClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:34488/PublicidadWebHitchUs/webresources";
+    //   private static final String BASE_URI = "http://localhost:34488/PublicidadWebHitchUs/webresources";
+    private static final String BASE_URI = "http://localhost:8080/PublicidadREST/webresources";
 
     public FacturaEmpresaRestClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

@@ -120,6 +120,12 @@ public class GestionCampania extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Fecha Fin");
 
+        cbxEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxEmpresaActionPerformed(evt);
+            }
+        });
+
         jLabel4.setText("Estado");
 
         checkActivo.setText("Activo");
@@ -364,6 +370,10 @@ public class GestionCampania extends javax.swing.JInternalFrame {
         dtFechaInicio.setDate(campania.getFechaInicio());
         dtFechaFin.setDate(campania.getFechaFin());
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void cbxEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxEmpresaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxEmpresaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -27,15 +27,17 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) {
-        UsuarioRestClient client= new  UsuarioRestClient();
+        //UsuarioRestClient client= new  UsuarioRestClient();
         
-        Usuario usuario=new Usuario();
-        usuario.setIdUsuario(1);
-        usuario.setNombres("Raul");
-        usuario.setPassword("1213");
-        usuario.setRuc("1234567890");
-        usuario.setCorreoElectronico("fsdfsd@.");
-        client.create_JSON(usuario);
+        probarTargetEdad();
+//        
+//        Usuario usuario=new Usuario();
+//        usuario.setIdUsuario(1);
+//        usuario.setNombres("Raul");
+//        usuario.setPassword("1213");
+//        usuario.setRuc("1234567890");
+//        usuario.setCorreoElectronico("fsdfsd@.");
+//        client.create_JSON(usuario);
 ////        //client.remove(5);
 ////        client.edit_JSON(usuario,1);
 ////        List<Usuario> usuarios = Arrays.asList(client.findAll_JSON());
@@ -75,12 +77,12 @@ public class Main {
 
     private static void probarTargetEdad() {
        TargetEdadPK targetEdad =new TargetEdadPK();
-       targetEdad.setRuc("1724560592");
-       targetEdad.setIdTargetEdad(1);
+       targetEdad.setRuc("1724560593");
+       //targetEdad.setIdTargetEdad(3);
        TargetEdad target=new TargetEdad();
        target.setTargetEdadPK(targetEdad);
        target.setNombre("Solo Adultos");
-       target.setDescripcion("mayores 18");
+       target.setDescripcion("mayore2 18");
        target.setEdadMinima(17);
        target.setEdadMaxima(99);
        target.setGenero("MAS");
