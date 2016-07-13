@@ -5,10 +5,15 @@
  */
 package ec.edu.espe.model.view;
 
+import ec.edu.espe.models.Campania;
+import ec.edu.espe.models.DetalleCampania;
+import ec.edu.espe.models.DetalleCampaniaPK;
 import ec.edu.espe.models.Elemento;
 import ec.edu.espe.models.Empresa;
 import ec.edu.espe.models.TargetEdad;
 import ec.edu.espe.rest.client.CampaniaRestClient;
+import ec.edu.espe.rest.client.DetalleCampaniaRestClient;
+import ec.edu.espe.rest.client.ElementoRestClient;
 import ec.edu.espe.rest.client.EmpresaRestClient;
 import ec.edu.espe.rest.client.TargetEdadRestClient;
 import java.awt.Color;
@@ -17,6 +22,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import static java.awt.image.ImageObserver.SOMEBITS;
+import static java.awt.image.ImageObserver.WIDTH;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,9 +49,14 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     TargetEdadRestClient clientTarget = new TargetEdadRestClient();
     EmpresaRestClient empresaRestClient = new EmpresaRestClient();
     CampaniaRestClient companiaRestClient = new CampaniaRestClient();
+    ElementoRestClient elementoRestClient = new ElementoRestClient();
+    DetalleCampaniaRestClient detalleCampaniaRestClient= new DetalleCampaniaRestClient();
     List<Empresa> empresas;
     List<TargetEdad> targets;
+    List<Campania> campanias;
     boolean successImage = false;
+    private static final String WEB = "WEB";
+    private static final String MOVIL = "MOVIL";
 
     public GestionPublicidad() {
         initComponents();
@@ -56,22 +68,33 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         modelo = (DefaultTableModel) jTable1.getModel();
         empresas = Arrays.asList(empresaRestClient.findAll_JSON());
         for (Empresa empresa : empresas) {
-            cbxEmpresa.addItem(empresa.getRazonSocial() + "-" + empresa.getRuc());
+            cbxEmpresa.addItem(empresa);
         }
-//        List<Campania> campanias = Arrays.asList(companiaRestClient.findAll_JSON());
-//        for (Campania empresa : campanias) {
-//            cbxCampania.addItem(empresa.getNombre() + "-" + empresa.getEstado());
-//        }
+        campanias = Arrays.asList(companiaRestClient.findAll_JSON());
+        if (empresas != null) {
+            System.out.println("campanias cargadas:" + campanias.size());
+            for (Campania empresa : campanias) {
+                if (empresas.get(0).getRuc().compareTo(empresa.getCampaniaPK().getRuc()) == 0) {
+                    cbxCampania.addItem(empresa);
+                }
+            }
+        } else {
+            for (Campania empresa : campanias) {
+                cbxCampania.addItem(empresa);
+            }
+        }
+
         targets = Arrays.asList(clientTarget.findAll_JSON());
         if (empresas != null) {
+            System.out.println("targets cargados:" + targets.size());
             for (TargetEdad target : targets) {
                 if (empresas.get(0).getRuc().compareTo(target.getTargetEdadPK().getRuc()) == 0) {
-                    cbxTarget.addItem(target.getNombre() + "-" + target.getGenero());
+                    cbxTarget.addItem(target);
                 }
             }
         } else {
             for (TargetEdad target : targets) {
-                cbxTarget.addItem(target.getNombre() + "-" + target.getGenero());
+                cbxTarget.addItem(target);
             }
         }
 
@@ -106,21 +129,16 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        lblWeb = new javax.swing.JLabel();
-        lbMovil = new javax.swing.JLabel();
+        lblPlataforma = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
-        bntMovilPublicidad = new javax.swing.JButton();
-        btnWebPublicidad = new javax.swing.JButton();
+        btnImagenUp = new javax.swing.JButton();
         chActivado = new javax.swing.JCheckBox();
+        cbxPlataforma = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         txtLink = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         cbxPantalla = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        chbOp1 = new javax.swing.JCheckBox();
-        chbOp2 = new javax.swing.JCheckBox();
-        chOp3 = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -139,6 +157,8 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ec/edu/espe/images/users.png"))); // NOI18N
         jLabel2.setToolTipText("");
 
+        btnModificar.setBackground(new java.awt.Color(64, 159, 129));
+        btnModificar.setForeground(new java.awt.Color(255, 255, 255));
         btnModificar.setText("Modificar");
         btnModificar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -147,6 +167,8 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             }
         });
 
+        btnCrear.setBackground(new java.awt.Color(64, 159, 129));
+        btnCrear.setForeground(new java.awt.Color(255, 255, 255));
         btnCrear.setText("Crear");
         btnCrear.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCrear.addActionListener(new java.awt.event.ActionListener() {
@@ -155,6 +177,8 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             }
         });
 
+        btnEliminar.setBackground(new java.awt.Color(64, 159, 129));
+        btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setText("Eliminar");
         btnEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -169,6 +193,11 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        cbxTarget.setForeground(new java.awt.Color(0, 153, 204));
+
+        cbxCampania.setForeground(new java.awt.Color(0, 153, 204));
+
+        cbxEmpresa.setForeground(new java.awt.Color(0, 153, 204));
         cbxEmpresa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cbxEmpresaMouseClicked(evt);
@@ -176,12 +205,15 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(32, 98, 167));
         jLabel3.setText("Target de mercado");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(32, 98, 167));
         jLabel1.setText("Campaña");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(32, 98, 167));
         jLabel6.setText("Empresa");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -229,33 +261,31 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(32, 98, 167));
         jLabel8.setText("Nombre");
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(32, 98, 167));
         jLabel9.setText("Estado de Activación");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(32, 98, 167));
         jLabel4.setText("Banner de Publicidad");
 
-        lblWeb.setText("Banner Web");
+        lblPlataforma.setText("Imagen Banner");
 
-        lbMovil.setText("Banner Movil");
-
-        bntMovilPublicidad.setText("Abrir");
-        bntMovilPublicidad.addActionListener(new java.awt.event.ActionListener() {
+        btnImagenUp.setForeground(new java.awt.Color(0, 153, 204));
+        btnImagenUp.setText("Abrir");
+        btnImagenUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntMovilPublicidadActionPerformed(evt);
-            }
-        });
-
-        btnWebPublicidad.setText("Abrir");
-        btnWebPublicidad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnWebPublicidadActionPerformed(evt);
+                btnImagenUpActionPerformed(evt);
             }
         });
 
         chActivado.setText("Activado");
+
+        cbxPlataforma.setForeground(new java.awt.Color(0, 153, 204));
+        cbxPlataforma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione una...", "MOVIL", "WEB" }));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -265,54 +295,48 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel8))
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(lblWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(chActivado)
-                            .addComponent(lbMovil, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel8))
+                            .addComponent(jLabel9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(bntMovilPublicidad, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnWebPublicidad, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(0, 1, Short.MAX_VALUE)
+                                .addComponent(lblPlataforma, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnImagenUp, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(chActivado)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbxPlataforma, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblWeb)
-                            .addComponent(btnWebPublicidad))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(39, 39, 39)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lbMovil)
-                                    .addComponent(bntMovilPublicidad)))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addComponent(jLabel4)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(chActivado))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(cbxPlataforma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPlataforma)
+                    .addComponent(btnImagenUp))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(chActivado))
                 .addContainerGap())
         );
 
@@ -320,6 +344,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(32, 98, 167));
         jLabel10.setText("Link/Enlace");
 
         txtLink.addActionListener(new java.awt.event.ActionListener() {
@@ -328,24 +353,9 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel11.setText("Lugar o Pantalla");
-
-        cbxPantalla.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(32, 98, 167));
         jLabel12.setText("Posición Banner");
-
-        chbOp1.setText("Toda la pantalla App Movil");
-        chbOp1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chbOp1ActionPerformed(evt);
-            }
-        });
-
-        chbOp2.setText("Ventana Modal en Web");
-
-        chOp3.setText("En la parte inferior del movil");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -354,47 +364,26 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel10))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cbxPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtLink, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addGap(31, 31, 31)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chbOp2)
-                            .addComponent(chbOp1)
-                            .addComponent(chOp3))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtLink)
+                    .addComponent(cbxPantalla, 0, 194, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(36, 36, 36)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(32, 32, 32)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(chbOp1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(chbOp2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                        .addComponent(chOp3))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel12)
-                        .addContainerGap())))
+                    .addComponent(jLabel12)
+                    .addComponent(cbxPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -425,12 +414,13 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista de Usuarios"));
 
+        jTable1.setForeground(new java.awt.Color(0, 102, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Email", "Nombre", "Password", "RUC"
+                "ID", "Nombre", "Posición", "URL", "Path"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -479,7 +469,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 1035, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -521,12 +511,35 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        String pantallaList[] = cbxPantalla.getItemAt(cbxPantalla.getSelectedIndex()).split("-");
         System.out.println("Nombre:" + txtNombre.getText()
-//                + "Posición:"++
-//        "URL"+txtLink.getText()
+                + "Posición:" + pantallaList[1]
+                + "URL" + txtLink.getText()
+                + "PATH"
         );
-        Elemento elemento = new Elemento();
-
+        try {
+            Elemento elemento = new Elemento();
+            elemento.setNombre(txtNombre.getText());
+            elemento.setPath(txtLink.getText());//internamente el servidor le da localidad
+            elemento.setPosicion(cbxPlataforma.getSelectedItem().toString().substring(0, 3));
+            elemento.setUrl(txtLink.getText());
+            elementoRestClient.create_JSON(elemento);
+            /////
+            elemento.setIdElemento(28);
+            //////
+            DetalleCampania detalleCampania = new DetalleCampania();
+            DetalleCampaniaPK detalleCampaniaPK = new DetalleCampaniaPK();
+            detalleCampaniaPK.setIdElemento(elemento.getIdElemento());
+            detalleCampaniaPK.setRuc(cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).getRuc());
+            detalleCampaniaPK.setSecCampania(cbxCampania.getItemAt(cbxCampania.getSelectedIndex()).getCampaniaPK().getSecCampania());
+            detalleCampania.setDetalleCampaniaPK(detalleCampaniaPK);
+            detalleCampania.setCampania(cbxCampania.getItemAt(cbxCampania.getSelectedIndex()));
+            detalleCampania.setElemento(elemento);
+            detalleCampaniaRestClient.create_JSON(detalleCampania);
+            cargarDatos();
+        } catch (Exception ex) {
+            System.err.println("Elemento no creado");
+        }
     }//GEN-LAST:event_btnCrearActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -541,22 +554,13 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_cbxEmpresaMouseClicked
 
-    private void btnWebPublicidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWebPublicidadActionPerformed
+    private void btnImagenUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImagenUpActionPerformed
         int returnVal = fileChooserWeb.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 File file = fileChooserWeb.getSelectedFile();
-                System.out.println("Se quiere seleccionar el archivo: " + file.getName());
-                lbMovil.setText(file.getName());
-                System.out.println("length:" + file.length() + "-" + file.getFreeSpace() + "--" + file.getUsableSpace());
-                double sizeInMb = file.length() / (1024.0 * 1024.0);
-                System.out.println("MB" + sizeInMb);
-                BufferedImage bufferedImage = ImageIO.read(file);
-                if (sizeInMb > 1.0 || bufferedImage.getWidth() > 500 || bufferedImage.getHeight() > 500) {
-                    successImage = false;
-                    JOptionPane.showMessageDialog(null, "Lo sentimos, no puede subir archivos mayores a 1.1MB");
-                } else {
-                    successImage = true;
+                if (validateImage(file)) {
+                    lblPlataforma.setText(file.getName());
                 }
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Lo sentimos, Se generó un problema al cargar la imágen.");
@@ -564,56 +568,23 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         } else {
             System.out.println("File access cancelled by user.");
         }
-    }//GEN-LAST:event_btnWebPublicidadActionPerformed
-
-    private void bntMovilPublicidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntMovilPublicidadActionPerformed
-        int returnVal = fileChooserWeb.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-                File file = fileChooserWeb.getSelectedFile();
-                System.out.println("Se quiere seleccionar el archivo: " + file.getName());
-                lbMovil.setText(file.getName());
-                System.out.println("length:" + file.length() + "-" + file.getFreeSpace() + "--" + file.getUsableSpace());
-                double sizeInMb = file.length() / (1024.0 * 1024.0);
-                System.out.println("MB" + sizeInMb);
-                BufferedImage bufferedImage = ImageIO.read(file);
-                if (sizeInMb > 1.0 || bufferedImage.getWidth() > 360 || bufferedImage.getHeight() > 615) {
-                    successImage = false;
-                    JOptionPane.showMessageDialog(null, "Lo sentimos, no puede subir archivos mayores a 1.1MB");
-                } else {
-                    successImage = true;
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Lo sentimos, Se generó un problema al cargar la imágen.");
-            }
-        } else {
-            System.out.println("File access cancelled by user.");
-        }
-    }//GEN-LAST:event_bntMovilPublicidadActionPerformed
-
-    private void chbOp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbOp1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_chbOp1ActionPerformed
+    }//GEN-LAST:event_btnImagenUpActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bntMovilPublicidad;
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnImagenUp;
     private javax.swing.JButton btnModificar;
-    private javax.swing.JButton btnWebPublicidad;
-    private javax.swing.JComboBox<String> cbxCampania;
-    private javax.swing.JComboBox<String> cbxEmpresa;
+    private javax.swing.JComboBox<Campania> cbxCampania;
+    public javax.swing.JComboBox<Empresa> cbxEmpresa;
     private javax.swing.JComboBox<String> cbxPantalla;
-    private javax.swing.JComboBox<String> cbxTarget;
+    private javax.swing.JComboBox<String> cbxPlataforma;
+    private javax.swing.JComboBox<TargetEdad> cbxTarget;
     private javax.swing.JCheckBox chActivado;
-    private javax.swing.JCheckBox chOp3;
-    private javax.swing.JCheckBox chbOp1;
-    private javax.swing.JCheckBox chbOp2;
     private javax.swing.JFileChooser fileChooserWeb;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -630,21 +601,24 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel lbMovil;
-    private javax.swing.JLabel lblWeb;
+    private javax.swing.JLabel lblPlataforma;
     private javax.swing.JTextField txtLink;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 
     private void cargarDatos() {
-//        UsuarioJpaController usu = new UsuarioJpaController();
-//        List<Usuario> usuarios = usu.findUsuarioEntities();
-//        for (int i = 0; i < jTable1.getRowCount(); i++) {
-//            modelo.removeRow(i);
-//        }
-//        for (Usuario usuario : usuarios) {
-//            modelo.addRow(new Object[]{usuario.getIdUsuario(), usuario.getCorreoElectronico(), usuario.getNombres(), usuario.getPassword(), usuario.getRuc()});
-//        }
+
+        modelo = (DefaultTableModel) jTable1.getModel();
+        System.out.println("Filas de la tabla " + jTable1.getRowCount());
+        for (int i = jTable1.getRowCount() - 1; i >= 0; i--) {
+            modelo.removeRow(i);
+            System.out.println("Eliminando la fila ");
+        }
+        List<Elemento> elementos = Arrays.asList(elementoRestClient.findAll_JSON());
+        for (Elemento elemento : elementos) {
+            System.out.println(elemento.toString());
+            modelo.addRow(new Object[]{elemento.getIdElemento(), elemento.getNombre(), elemento.getPosicion(), elemento.getUrl(), elemento.getPath()});
+        }
     }
 
     public Image getIconImage() {
@@ -655,18 +629,47 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     }
 
     public void init() {
+        btnImagenUp.setEnabled(false);
         cbxEmpresa.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent event) {
                 if (targets != null && empresas != null) {
                     cbxTarget.removeAllItems();
-                    String empresaIde[] = cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).split("-");
                     for (TargetEdad target : targets) {
-                        if (target.getTargetEdadPK().getRuc().compareTo(empresaIde[1]) == 0) {
-                            cbxTarget.addItem(target.getNombre() + "-" + target.getGenero());
+                        if (target.getTargetEdadPK().getRuc().compareTo(cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).getRuc()) == 0) {
+                            cbxTarget.addItem(target);
                         }
                     }
+                }
+                if (campanias != null && empresas != null) {
+                    cbxCampania.removeAllItems();
+                    for (Campania campania : campanias) {
+                        if (campania.getCampaniaPK().getRuc().compareTo(cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).getRuc()) == 0) {
+                            cbxCampania.addItem(campania);
+                        }
+                    }
+                }
+            }
+        });
+        cbxPlataforma.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                cbxPantalla.removeAllItems();
+                if (cbxPlataforma.getSelectedIndex() != 0) {
+                    btnImagenUp.setEnabled(true);
+                    if (cbxPlataforma.getSelectedItem().toString().compareTo(WEB) == 0) {
+                        cbxPantalla.addItem("Arriba-WT");
+                        cbxPantalla.addItem("Abajo-WD");
+                        cbxPantalla.addItem("Izquierda-WL");
+                        cbxPantalla.addItem("Derecha-WR");
+                        cbxPantalla.addItem("Modal-WM");
+                    } else if (cbxPlataforma.getSelectedItem().toString().compareTo(MOVIL) == 0) {
+                        cbxPantalla.addItem("Pantalla Completa-MC");
+                        cbxPantalla.addItem("Arriba-MT");
+                        cbxPantalla.addItem("Abajo-MD");
+                    }
+                } else {
+                    btnImagenUp.setEnabled(false);
                 }
             }
         });
@@ -675,6 +678,33 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     public void clearFields() {
         successImage = false;
     }
+
+    public boolean validateImage(File file) throws IOException {
+        boolean success = false;
+        System.out.println("Se quiere seleccionar el archivo: " + file.getName());
+        System.out.println("length:" + file.length() + "-" + file.getFreeSpace() + "--" + file.getUsableSpace());
+        double sizeInMb = file.length() / (1024.0 * 1024.0);
+        System.out.println("MB" + sizeInMb);
+        BufferedImage bufferedImage = ImageIO.read(file);
+        if (sizeInMb <= 1.0) {
+            if (cbxPlataforma.getSelectedItem().toString().compareTo(WEB) == 0) {
+                if (bufferedImage.getWidth() <= 500 || bufferedImage.getHeight() <= 500) {//verifica que es web
+                    success = true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Lo sentimos, las dimensiones de la imágen supera lo establecido que son 500x500.");
+                }
+            } else if (cbxPlataforma.getSelectedItem().toString().compareTo(MOVIL) == 0) {
+                if (bufferedImage.getWidth() <= 180 || bufferedImage.getHeight() <= 320) {//verifica que es movil
+                    success = true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Lo sentimos, las dimensiones de la imágen supera lo establecido que son 180x320.");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Lo sentimos, no puede subir archivos mayores a 1.0MB");
+        }
+        return success;
+    }
 }
 
 class MyCustomFilter extends javax.swing.filechooser.FileFilter {
@@ -682,7 +712,7 @@ class MyCustomFilter extends javax.swing.filechooser.FileFilter {
     @Override
     public boolean accept(File file) {
         // Allow only directories, or files with ".txt" extension
-        return file.isDirectory() || file.getAbsolutePath().endsWith(".png");
+        return file.isDirectory() || file.getAbsolutePath().endsWith(".png") || file.getAbsolutePath().endsWith(".jpg");
     }
 
     @Override

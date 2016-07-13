@@ -86,4 +86,10 @@ public class TargetEdad implements Serializable{
     public void setGenero(String genero) {
         this.genero = genero;
     }
+
+    @Override
+    public String toString() {
+        return getNombre() + "-" + getGenero();
+    }
+    
 }

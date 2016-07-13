@@ -28,7 +28,8 @@ public class TargetEdadRestClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://52.41.82.209:4848/PublicidadWebHitchUs/webresources";
+    //private static final String BASE_URI = "http://52.41.82.209:4848/PublicidadWebHitchUs/webresources";
+    private static final String BASE_URI = "http://localhost:8080/PublicidadREST/webresources";
 
     public TargetEdadRestClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

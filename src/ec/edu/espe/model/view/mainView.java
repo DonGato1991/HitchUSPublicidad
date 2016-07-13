@@ -69,6 +69,8 @@ public class mainView extends javax.swing.JFrame {
             .addGap(0, 481, Short.MAX_VALUE)
         );
 
+        jMenuBar1.setBackground(new java.awt.Color(64, 159, 129));
+
         jMenu1.setText("Usuarios");
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

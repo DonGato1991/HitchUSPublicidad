@@ -30,6 +30,7 @@ public class GestionTarget extends javax.swing.JInternalFrame {
      * Creates new form GestionUsuarios
      */
     DefaultTableModel modelo;
+    String pk;
     Integer indice;
     TargetEdadRestClient clientTarget = new TargetEdadRestClient();
     EmpresaRestClient empresaRestClient = new EmpresaRestClient();
@@ -42,7 +43,7 @@ public class GestionTarget extends javax.swing.JInternalFrame {
         setFrameIcon(imagen);
         List<Empresa> empresas = Arrays.asList(empresaRestClient.findAll_JSON());
         for (Empresa empresa : empresas) {
-            cbxEmpresa.addItem(empresa.getRazonSocial() + "-" + empresa.getRuc());
+            cbxEmpresa.addItem(empresa);
         }
         modelo = (DefaultTableModel) jTable1.getModel();
         cargarDatos();
@@ -67,7 +68,6 @@ public class GestionTarget extends javax.swing.JInternalFrame {
         txtDescripcion = new javax.swing.JTextField();
         btnModificar = new javax.swing.JButton();
         btnCrear = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         lblEdadMax = new javax.swing.JLabel();
         spinnerEdadMin = new javax.swing.JSpinner();
         SpinnerNumberModel m_numberSpinnerModel;
@@ -93,21 +93,30 @@ public class GestionTarget extends javax.swing.JInternalFrame {
         setTitle("Gestion de Target");
         setAutoscrolls(true);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos por Target"));
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ec/edu/espe/images/users.png"))); // NOI18N
         jLabel2.setToolTipText("");
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(32, 98, 167));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Nombre");
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(32, 98, 167));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Descripción");
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(32, 98, 167));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Género");
 
+        lbEdadMin.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbEdadMin.setForeground(new java.awt.Color(32, 98, 167));
         lbEdadMin.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbEdadMin.setText("Edad Mínima");
 
@@ -123,6 +132,9 @@ public class GestionTarget extends javax.swing.JInternalFrame {
             }
         });
 
+        btnModificar.setBackground(new java.awt.Color(64, 159, 129));
+        btnModificar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnModificar.setForeground(new java.awt.Color(255, 255, 255));
         btnModificar.setText("Modificar");
         btnModificar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -131,6 +143,9 @@ public class GestionTarget extends javax.swing.JInternalFrame {
             }
         });
 
+        btnCrear.setBackground(new java.awt.Color(64, 159, 129));
+        btnCrear.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnCrear.setForeground(new java.awt.Color(255, 255, 255));
         btnCrear.setText("Crear");
         btnCrear.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCrear.addActionListener(new java.awt.event.ActionListener() {
@@ -139,18 +154,14 @@ public class GestionTarget extends javax.swing.JInternalFrame {
             }
         });
 
-        btnEliminar.setText("Eliminar");
-        btnEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
-            }
-        });
-
+        lblEdadMax.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblEdadMax.setForeground(new java.awt.Color(32, 98, 167));
         lblEdadMax.setText("Edad Máxima");
 
         cbxGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MASCULINO", "FEMENINO", "OTRO" }));
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(32, 98, 167));
         jLabel5.setText("Empresa ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -192,10 +203,8 @@ public class GestionTarget extends javax.swing.JInternalFrame {
                         .addGap(311, 311, 311)
                         .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(48, 48, 48)
-                        .addComponent(btnModificar)
-                        .addGap(55, 55, 55)
-                        .addComponent(btnEliminar)))
-                .addContainerGap(112, Short.MAX_VALUE))
+                        .addComponent(btnModificar)))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,12 +235,13 @@ public class GestionTarget extends javax.swing.JInternalFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificar)
-                    .addComponent(btnEliminar)
                     .addComponent(btnCrear)))
         );
 
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista de Usuarios"));
 
+        jTable1.setForeground(new java.awt.Color(0, 102, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -246,6 +256,11 @@ public class GestionTarget extends javax.swing.JInternalFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -307,8 +322,7 @@ public class GestionTarget extends javax.swing.JInternalFrame {
         TargetEdad target = new TargetEdad();
         TargetEdadPK edadPK = new TargetEdadPK();
         String[] identificacion= new String[2];
-        identificacion= cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).split("-");
-        edadPK.setRuc(identificacion[1].trim());
+        edadPK.setRuc(cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).getRuc());
         target.setTargetEdadPK(edadPK);
         target.setNombre(txtNombre.getText());
         target.setDescripcion(txtDescripcion.getText());
@@ -317,7 +331,6 @@ public class GestionTarget extends javax.swing.JInternalFrame {
         String gen= cbxGenero.getItemAt(cbxGenero.getSelectedIndex()).substring(0, 3);
         System.out.println(gen+" "+edadPK.getRuc());
         target.setGenero(gen.toUpperCase());
-        //indice = target.getTargetEdadPK().getIdTargetEdad();
         try {
             clientTarget.create_JSON(target);
             cargarDatos();
@@ -326,19 +339,18 @@ public class GestionTarget extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnCrearActionPerformed
 
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        TargetEdad target = new TargetEdad();
-//        target.setIdUsuario(indice);
-//        clientTarget.remove(indice);
-        cargarDatos();
-    }//GEN-LAST:event_btnEliminarActionPerformed
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+//        pk = "ruc="+modelo.getValueAt(jTable1.getSelectedRow(), 0)+";idTargetEdad="+modelo.getValueAt(jTable1.getSelectedRow(), 0);
+//        modelo.get(jTable1.convertRowIndexToModel(jTable1.getSelectedRow()));
+//        System.out.println("PK  Usuario: " + pk);
+//        TargetEdad campania = clientTarget.find_JSON(TargetEdad.class, pk);
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrear;
-    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
-    private javax.swing.JComboBox<String> cbxEmpresa;
+    private javax.swing.JComboBox<Empresa> cbxEmpresa;
     private javax.swing.JComboBox<String> cbxGenero;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

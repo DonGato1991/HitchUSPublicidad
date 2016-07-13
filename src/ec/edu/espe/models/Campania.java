@@ -107,4 +107,10 @@ public class Campania implements Serializable{
     public void setEstadisticaCampania(EstadisticaCampania estadisticaCampania) {
         this.estadisticaCampania = estadisticaCampania;
     }
+
+    @Override
+    public String toString() {
+        return getNombre() + "-" + getEstado();
+    }
+    
 }

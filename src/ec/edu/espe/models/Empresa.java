@@ -73,4 +73,10 @@ public class Empresa implements Serializable{
     public void setRepresentante(String representante) {
         this.representante = representante;
     }
+
+    @Override
+    public String toString() {
+        return getRazonSocial() + "-" + getRuc();
+    }
+    
 }
