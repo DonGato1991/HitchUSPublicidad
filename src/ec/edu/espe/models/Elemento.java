@@ -18,6 +18,33 @@ public class Elemento implements Serializable{
     private String posicion;
     private String path;
     private String url;
+    private String nombreImagen;
+    private String ruc;
+
+    public String getNombreImagen() {
+        return nombreImagen;
+    }
+
+    public void setNombreImagen(String nombreImagen) {
+        this.nombreImagen = nombreImagen;
+    }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
+
+    public String getPantalla() {
+        return pantalla;
+    }
+
+    public void setPantalla(String pantalla) {
+        this.pantalla = pantalla;
+    }
+    private String pantalla;
     public Elemento() {
     }
 
