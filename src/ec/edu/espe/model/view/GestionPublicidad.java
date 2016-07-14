@@ -14,6 +14,7 @@ import ec.edu.espe.models.TargetEdad;
 import ec.edu.espe.rest.client.CampaniaRestClient;
 import ec.edu.espe.rest.client.DetalleCampaniaRestClient;
 import ec.edu.espe.rest.client.ElementoRestClient;
+import ec.edu.espe.rest.client.ElementoRestClient;
 import ec.edu.espe.rest.client.EmpresaRestClient;
 import ec.edu.espe.rest.client.TargetEdadRestClient;
 import java.awt.Color;
@@ -22,19 +23,17 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import static java.awt.image.ImageObserver.SOMEBITS;
-import static java.awt.image.ImageObserver.WIDTH;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -50,10 +49,11 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     EmpresaRestClient empresaRestClient = new EmpresaRestClient();
     CampaniaRestClient companiaRestClient = new CampaniaRestClient();
     ElementoRestClient elementoRestClient = new ElementoRestClient();
-    DetalleCampaniaRestClient detalleCampaniaRestClient= new DetalleCampaniaRestClient();
+    DetalleCampaniaRestClient detalleCampaniaRestClient = new DetalleCampaniaRestClient();
     List<Empresa> empresas;
     List<TargetEdad> targets;
     List<Campania> campanias;
+    File fileImage;
     boolean successImage = false;
     private static final String WEB = "WEB";
     private static final String MOVIL = "MOVIL";
@@ -524,6 +524,17 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             elemento.setPosicion(cbxPlataforma.getSelectedItem().toString().substring(0, 3));
             elemento.setUrl(txtLink.getText());
             elementoRestClient.create_JSON(elemento);
+            if (fileImage != null) {
+                String type;
+                if(fileImage.getName().endsWith("png")){
+                    type="png";
+                }else{
+                    type="jpg";
+                }
+                BufferedImage buffer = ImageIO.read(fileImage);
+                String imageCode64 = encodeToString(buffer, type);
+                elementoRestClient.cargaImg(imageCode64);
+            }
             /////
             elemento.setIdElemento(28);
             //////
@@ -690,12 +701,14 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             if (cbxPlataforma.getSelectedItem().toString().compareTo(WEB) == 0) {
                 if (bufferedImage.getWidth() <= 500 || bufferedImage.getHeight() <= 500) {//verifica que es web
                     success = true;
+                    fileImage = file;
                 } else {
                     JOptionPane.showMessageDialog(null, "Lo sentimos, las dimensiones de la imágen supera lo establecido que son 500x500.");
                 }
             } else if (cbxPlataforma.getSelectedItem().toString().compareTo(MOVIL) == 0) {
                 if (bufferedImage.getWidth() <= 180 || bufferedImage.getHeight() <= 320) {//verifica que es movil
                     success = true;
+                    fileImage = file;
                 } else {
                     JOptionPane.showMessageDialog(null, "Lo sentimos, las dimensiones de la imágen supera lo establecido que son 180x320.");
                 }
@@ -704,6 +717,24 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Lo sentimos, no puede subir archivos mayores a 1.0MB");
         }
         return success;
+    }
+
+    public static String encodeToString(BufferedImage image, String type) {
+        String imageString = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        try {
+            ImageIO.write(image, type, bos);
+            byte[] imageBytes = bos.toByteArray();
+
+            BASE64Encoder encoder = new BASE64Encoder();
+            imageString = encoder.encode(imageBytes);
+
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageString;
     }
 }
 

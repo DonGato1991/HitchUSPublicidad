@@ -28,7 +28,7 @@ public class ElementoRestClient {
     private WebTarget webTarget;
     private Client client;
     //private static final String BASE_URI = "http://52.41.82.209:4848/PublicidadWebHitchUs/webresources";
-    private static final String BASE_URI = "http://localhost:8080/PublicidadREST/webresources";
+    private static final String BASE_URI = "http://52.34.202.157:8080/PublicidadWebHitchUs/webresources";
 
     public ElementoRestClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -47,7 +47,7 @@ public class ElementoRestClient {
 
     public void edit_JSON(Elemento requestEntity, Integer id) throws ClientErrorException {
         webTarget
-                .path("edit/"+id)
+                .path("edit/" + id)
                 .request(javax.ws.rs.core.MediaType.APPLICATION_JSON)
                 .put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
@@ -60,7 +60,7 @@ public class ElementoRestClient {
 
     public <Elemento> Elemento find_JSON(Class<Elemento> responseType, Integer id) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path("find/"+id);
+        resource = resource.path("find/" + id);
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
@@ -98,12 +98,16 @@ public class ElementoRestClient {
 
     public void remove(Integer id) throws ClientErrorException {
         webTarget
-                .path("remove/"+id)
+                .path("remove/" + id)
                 .request().delete();
+    }
+
+    public void cargaImg(Object requestEntity) throws ClientErrorException {
+        webTarget.path("cargaImg").request(javax.ws.rs.core.MediaType.TEXT_PLAIN).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.TEXT_PLAIN));
     }
 
     public void close() {
         client.close();
     }
-    
+
 }
