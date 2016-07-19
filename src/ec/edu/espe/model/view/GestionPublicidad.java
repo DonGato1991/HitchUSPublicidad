@@ -17,6 +17,7 @@ import ec.edu.espe.rest.client.ElementoRestClient;
 import ec.edu.espe.rest.client.ElementoRestClient;
 import ec.edu.espe.rest.client.EmpresaRestClient;
 import ec.edu.espe.rest.client.TargetEdadRestClient;
+import ec.edu.espe.util.Img;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -26,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -57,6 +59,8 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     boolean successImage = false;
     private static final String WEB = "WEB";
     private static final String MOVIL = "MOVIL";
+    private static final String PNG = "png";
+    private static final String JPG = "jpg";
 
     public GestionPublicidad() {
         initComponents();
@@ -133,7 +137,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         txtNombre = new javax.swing.JTextField();
         btnImagenUp = new javax.swing.JButton();
         chActivado = new javax.swing.JCheckBox();
-        cbxPlataforma = new javax.swing.JComboBox<>();
+        cbxPosicion = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         txtLink = new javax.swing.JTextField();
@@ -284,8 +288,8 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
 
         chActivado.setText("Activado");
 
-        cbxPlataforma.setForeground(new java.awt.Color(0, 153, 204));
-        cbxPlataforma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione una...", "MOVIL", "WEB" }));
+        cbxPosicion.setForeground(new java.awt.Color(0, 153, 204));
+        cbxPosicion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione una...", "MOVIL", "WEB" }));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -315,7 +319,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(cbxPlataforma, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(cbxPosicion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -324,7 +328,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(cbxPlataforma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxPosicion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPlataforma)
@@ -512,6 +516,9 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         String pantallaList[] = cbxPantalla.getItemAt(cbxPantalla.getSelectedIndex()).split("-");
+        String rucEmpresaSel = cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).getRuc();
+        String campSel = cbxCampania.getItemAt(cbxCampania.getSelectedIndex()).getCampaniaPK().getSecCampania().toString();
+        String targetSel = cbxTarget.getItemAt(cbxTarget.getSelectedIndex()).getTargetEdadPK().getIdTargetEdad().toString();
         System.out.println("Nombre:" + txtNombre.getText()
                 + "Posición:" + pantallaList[1]
                 + "URL" + txtLink.getText()
@@ -520,32 +527,52 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         try {
             Elemento elemento = new Elemento();
             elemento.setNombre(txtNombre.getText());
-            elemento.setPath(txtLink.getText());//internamente el servidor le da localidad
-            elemento.setPosicion(cbxPlataforma.getSelectedItem().toString().substring(0, 3));
+            elemento.setPosicion(cbxPosicion.getSelectedItem().toString().substring(0, 3));
             elemento.setUrl(txtLink.getText());
-            elementoRestClient.create_JSON(elemento);
+            elemento.setPantalla(pantallaList[1]);
+            elemento.setRuc(rucEmpresaSel);
             if (fileImage != null) {
                 String type;
-                if(fileImage.getName().endsWith("png")){
-                    type="png";
-                }else{
-                    type="jpg";
+                String typeImg;
+                if (fileImage.getName().endsWith("png")) {
+                    type = ".png";
+                    typeImg = PNG;
+                } else {
+                    type = ".jpg";
+                    typeImg = JPG;
                 }
                 BufferedImage buffer = ImageIO.read(fileImage);
-                String imageCode64 = encodeToString(buffer, type);
-                elementoRestClient.cargaImg(imageCode64);
+                String imageCode64 = encodeToString(buffer, typeImg);
+                Img a = new Img();
+                a.setContenido(imageCode64);
+                a.setNombre(rucEmpresaSel + "_" + campSel + "_" + targetSel + "_" + elemento.getNombre() + type);
+                a.setTipo("publicidad");
+                String path = elementoRestClient.writeImage(a);
+                System.out.println("path:" + path);
+                elemento.setNombreImagen(rucEmpresaSel + "_" + campSel + "_" + targetSel + "_" + txtNombre.getText() + type);
+                elemento.setPath(path);//internamente el servidor le da localidad
             }
+            elementoRestClient.create_JSON(elemento);
             /////
-            elemento.setIdElemento(28);
+            List<Elemento> elementos = new ArrayList<>();
+            Elemento tmp = new Elemento();
+            elementos = Arrays.asList(elementoRestClient.findAll_JSON());
+            int max = 0;
+            for (Elemento ele : elementos) {
+                if (ele.getIdElemento() > max) {
+                    max = ele.getIdElemento();
+                    tmp = ele;
+                }
+            }
             //////
             DetalleCampania detalleCampania = new DetalleCampania();
             DetalleCampaniaPK detalleCampaniaPK = new DetalleCampaniaPK();
-            detalleCampaniaPK.setIdElemento(elemento.getIdElemento());
-            detalleCampaniaPK.setRuc(cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex()).getRuc());
+            detalleCampaniaPK.setIdElemento(max);
+            detalleCampaniaPK.setRuc(rucEmpresaSel);
             detalleCampaniaPK.setSecCampania(cbxCampania.getItemAt(cbxCampania.getSelectedIndex()).getCampaniaPK().getSecCampania());
             detalleCampania.setDetalleCampaniaPK(detalleCampaniaPK);
             detalleCampania.setCampania(cbxCampania.getItemAt(cbxCampania.getSelectedIndex()));
-            detalleCampania.setElemento(elemento);
+            detalleCampania.setElemento(tmp);
             detalleCampaniaRestClient.create_JSON(detalleCampania);
             cargarDatos();
         } catch (Exception ex) {
@@ -590,7 +617,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<Campania> cbxCampania;
     public javax.swing.JComboBox<Empresa> cbxEmpresa;
     private javax.swing.JComboBox<String> cbxPantalla;
-    private javax.swing.JComboBox<String> cbxPlataforma;
+    private javax.swing.JComboBox<String> cbxPosicion;
     private javax.swing.JComboBox<TargetEdad> cbxTarget;
     private javax.swing.JCheckBox chActivado;
     private javax.swing.JFileChooser fileChooserWeb;
@@ -662,19 +689,19 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
                 }
             }
         });
-        cbxPlataforma.addActionListener(new ActionListener() {
+        cbxPosicion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 cbxPantalla.removeAllItems();
-                if (cbxPlataforma.getSelectedIndex() != 0) {
+                if (cbxPosicion.getSelectedIndex() != 0) {
                     btnImagenUp.setEnabled(true);
-                    if (cbxPlataforma.getSelectedItem().toString().compareTo(WEB) == 0) {
+                    if (cbxPosicion.getSelectedItem().toString().compareTo(WEB) == 0) {
                         cbxPantalla.addItem("Arriba-WT");
                         cbxPantalla.addItem("Abajo-WD");
                         cbxPantalla.addItem("Izquierda-WL");
                         cbxPantalla.addItem("Derecha-WR");
                         cbxPantalla.addItem("Modal-WM");
-                    } else if (cbxPlataforma.getSelectedItem().toString().compareTo(MOVIL) == 0) {
+                    } else if (cbxPosicion.getSelectedItem().toString().compareTo(MOVIL) == 0) {
                         cbxPantalla.addItem("Pantalla Completa-MC");
                         cbxPantalla.addItem("Arriba-MT");
                         cbxPantalla.addItem("Abajo-MD");
@@ -698,14 +725,14 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         System.out.println("MB" + sizeInMb);
         BufferedImage bufferedImage = ImageIO.read(file);
         if (sizeInMb <= 1.0) {
-            if (cbxPlataforma.getSelectedItem().toString().compareTo(WEB) == 0) {
+            if (cbxPosicion.getSelectedItem().toString().compareTo(WEB) == 0) {
                 if (bufferedImage.getWidth() <= 500 || bufferedImage.getHeight() <= 500) {//verifica que es web
                     success = true;
                     fileImage = file;
                 } else {
                     JOptionPane.showMessageDialog(null, "Lo sentimos, las dimensiones de la imágen supera lo establecido que son 500x500.");
                 }
-            } else if (cbxPlataforma.getSelectedItem().toString().compareTo(MOVIL) == 0) {
+            } else if (cbxPosicion.getSelectedItem().toString().compareTo(MOVIL) == 0) {
                 if (bufferedImage.getWidth() <= 180 || bufferedImage.getHeight() <= 320) {//verifica que es movil
                     success = true;
                     fileImage = file;

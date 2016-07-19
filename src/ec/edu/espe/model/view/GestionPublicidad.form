@@ -395,7 +395,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="cbxPlataforma" max="32767" attributes="0"/>
+                                      <Component id="cbxPosicion" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -408,7 +408,7 @@
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbxPlataforma" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbxPosicion" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -487,7 +487,7 @@
                         <Property name="text" type="java.lang.String" value="Activado"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="cbxPlataforma">
+                    <Component class="javax.swing.JComboBox" name="cbxPosicion">
                       <Properties>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="cc" green="99" red="0" type="rgb"/>

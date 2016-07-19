@@ -27,8 +27,8 @@ public class ElementoRestClient {
 
     private WebTarget webTarget;
     private Client client;
-    //private static final String BASE_URI = "http://52.41.82.209:4848/PublicidadWebHitchUs/webresources";
-    private static final String BASE_URI = "http://52.34.202.157:8080/PublicidadWebHitchUs/webresources";
+    private static final String BASE_URI = "http://localhost:8080/PublicidadREST/webresources";
+    //private static final String BASE_URI = "http://52.34.202.157:8080/PublicidadWebHitchUs/webresources";
 
     public ElementoRestClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -102,8 +102,8 @@ public class ElementoRestClient {
                 .request().delete();
     }
 
-    public void cargaImg(Object requestEntity) throws ClientErrorException {
-        webTarget.path("cargaImg").request(javax.ws.rs.core.MediaType.TEXT_PLAIN).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.TEXT_PLAIN));
+    public String writeImage(Object requestEntity) throws ClientErrorException {
+        return webTarget.path("writeImage").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), String.class);
     }
 
     public void close() {
