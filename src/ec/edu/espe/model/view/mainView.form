@@ -159,8 +159,14 @@
   <SubComponents>
     <Container class="javax.swing.JDesktopPane" name="escritorio">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="cc" type="rgb"/>
+        </Property>
         <Property name="autoscrolls" type="boolean" value="true"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="escritorio = new javax.swing.JDesktopPane() {&#xa;            private Image image;&#xa;&#xa;            {&#xa;                try {&#xa;                    image = ImageIO.read(getClass().getResourceAsStream(&#xa;                        &quot;/ec/edu/espe/images/Titulo.png&quot;));&#xa;                } catch (IOException e) {&#xa;                    e.printStackTrace();&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            protected void paintComponent(Graphics g) {&#xa;                super.paintComponent(g);&#xa;                g.drawImage(image, getWidth()/4, getHeight()/4, getWidth()/2, getHeight()/2, this);&#xa;            }&#xa;        };"/>
+      </AuxValues>
 
       <Layout>
         <DimensionLayout dim="0">

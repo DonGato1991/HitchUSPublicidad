@@ -27,8 +27,8 @@ public class ElementoRestClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/PublicidadREST/webresources";
-    //private static final String BASE_URI = "http://52.34.202.157:8080/PublicidadWebHitchUs/webresources";
+//    private static final String BASE_URI = "http://localhost:8080/PublicidadREST/webresources";
+    private static final String BASE_URI = "http://52.34.202.157:8080/PublicidadWebHitchUs/webresources";
 
     public ElementoRestClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -104,6 +104,24 @@ public class ElementoRestClient {
 
     public String writeImage(Object requestEntity) throws ClientErrorException {
         return webTarget.path("writeImage").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), String.class);
+    }
+
+    public <T> T getElement_XML(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path("getElement");
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T getElement_JSON(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path("getElement");
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+    
+        public String getImage() throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path("getImage");
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(String.class);
     }
 
     public void close() {

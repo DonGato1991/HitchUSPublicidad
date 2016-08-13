@@ -5,17 +5,27 @@
  */
 package ec.edu.espe.model.view;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JDesktopPane;
 
 /**
  *
  * @author homer
  */
 public class mainView extends javax.swing.JFrame {
+
+    private JDesktopPane jdpDesktop;
+    private static int openFrameCount = 0;
+    private BufferedImage img;
 
     /**
      * Creates new form mainView
@@ -56,125 +66,144 @@ public class mainView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(getIconImage());
 
-        escritorio.setAutoscrolls(true);
+        escritorio = new javax.swing.JDesktopPane() {
+            private Image image;
 
-        javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
-        escritorio.setLayout(escritorioLayout);
-        escritorioLayout.setHorizontalGroup(
-            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 843, Short.MAX_VALUE)
-        );
-        escritorioLayout.setVerticalGroup(
-            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 481, Short.MAX_VALUE)
-        );
-
-        jMenuBar1.setBackground(new java.awt.Color(64, 159, 129));
-
-        jMenu1.setText("Usuarios");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
+            {
+                try {
+                    image = ImageIO.read(getClass().getResourceAsStream(
+                        "/ec/edu/espe/images/Titulo.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+        }
 
-        jMenuItem1.setText("Gestionar");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(image, getWidth()/4, getHeight()/4, getWidth()/2, getHeight()/2, this);
+        }
+    };
+    escritorio.setBackground(new java.awt.Color(204, 255, 255));
+    escritorio.setAutoscrolls(true);
 
-        jMenuBar1.add(jMenu1);
+    javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
+    escritorio.setLayout(escritorioLayout);
+    escritorioLayout.setHorizontalGroup(
+        escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGap(0, 843, Short.MAX_VALUE)
+    );
+    escritorioLayout.setVerticalGroup(
+        escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGap(0, 481, Short.MAX_VALUE)
+    );
 
-        jMenu2.setText("Empresas");
+    jMenuBar1.setBackground(new java.awt.Color(64, 159, 129));
 
-        jMenuItem2.setText("Registros");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem2);
+    jMenu1.setText("Usuarios");
+    jMenu1.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenu1ActionPerformed(evt);
+        }
+    });
 
-        jMenuItem6.setText("Facturas");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem6);
+    jMenuItem1.setText("Gestionar");
+    jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenuItem1ActionPerformed(evt);
+        }
+    });
+    jMenu1.add(jMenuItem1);
 
-        jMenuItem7.setText("Detalles por Factura");
-        jMenu2.add(jMenuItem7);
+    jMenuBar1.add(jMenu1);
 
-        jMenuBar1.add(jMenu2);
+    jMenu2.setText("Empresas");
 
-        jMenu4.setText("Campañas");
+    jMenuItem2.setText("Registros");
+    jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenuItem2ActionPerformed(evt);
+        }
+    });
+    jMenu2.add(jMenuItem2);
 
-        jMenuItem4.setText("Campaña");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItem4);
+    jMenuItem6.setText("Facturas");
+    jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenuItem6ActionPerformed(evt);
+        }
+    });
+    jMenu2.add(jMenuItem6);
 
-        jMenuItem9.setText("Estadísticas");
-        jMenu4.add(jMenuItem9);
+    jMenuItem7.setText("Detalles por Factura");
+    jMenu2.add(jMenuItem7);
 
-        jMenuItem10.setText("Historial");
-        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem10ActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItem10);
+    jMenuBar1.add(jMenu2);
 
-        jMenuBar1.add(jMenu4);
+    jMenu4.setText("Campañas");
 
-        jMenu3.setText("Publicidad");
+    jMenuItem4.setText("Campaña");
+    jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenuItem4ActionPerformed(evt);
+        }
+    });
+    jMenu4.add(jMenuItem4);
 
-        jMenuItem3.setText("Elementos");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem3);
+    jMenuItem9.setText("Estadísticas");
+    jMenu4.add(jMenuItem9);
 
-        jMenuBar1.add(jMenu3);
+    jMenuItem10.setText("Historial");
+    jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenuItem10ActionPerformed(evt);
+        }
+    });
+    jMenu4.add(jMenuItem10);
 
-        jMenu5.setText("Target");
+    jMenuBar1.add(jMenu4);
 
-        jMenuItem5.setText("Target Edad");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem5ActionPerformed(evt);
-            }
-        });
-        jMenu5.add(jMenuItem5);
+    jMenu3.setText("Publicidad");
 
-        jMenuItem11.setText("Segmentación ");
-        jMenu5.add(jMenuItem11);
+    jMenuItem3.setText("Elementos");
+    jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenuItem3ActionPerformed(evt);
+        }
+    });
+    jMenu3.add(jMenuItem3);
 
-        jMenuBar1.add(jMenu5);
+    jMenuBar1.add(jMenu3);
 
-        setJMenuBar(jMenuBar1);
+    jMenu5.setText("Target");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(escritorio)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(escritorio, javax.swing.GroupLayout.Alignment.TRAILING)
-        );
+    jMenuItem5.setText("Target Edad");
+    jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jMenuItem5ActionPerformed(evt);
+        }
+    });
+    jMenu5.add(jMenuItem5);
 
-        pack();
+    jMenuItem11.setText("Segmentación ");
+    jMenu5.add(jMenuItem11);
+
+    jMenuBar1.add(jMenu5);
+
+    setJMenuBar(jMenuBar1);
+
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    getContentPane().setLayout(layout);
+    layout.setHorizontalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addComponent(escritorio)
+    );
+    layout.setVerticalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addComponent(escritorio, javax.swing.GroupLayout.Alignment.TRAILING)
+    );
+
+    pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
