@@ -20,6 +20,7 @@ public class FacturaEmpresa implements Serializable{
     private String secuencial;
     private String direccion;
     private String telefono;
+    private String razonSocial;
     private BigDecimal valorTotal;
     private BigDecimal porcentajeIva;
     private BigDecimal subtotal;
@@ -93,4 +94,13 @@ public class FacturaEmpresa implements Serializable{
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }
+
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+    
 }

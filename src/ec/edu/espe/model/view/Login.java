@@ -6,13 +6,13 @@
 package ec.edu.espe.model.view;
 
 import ec.edu.espe.models.Usuario;
-import ec.edu.espe.rest.client.ElementoRestClient;
 import ec.edu.espe.rest.client.UsuarioRestClient;
-import ec.edu.espe.util.UtilUI;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.Icon;
@@ -91,7 +91,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setAutoscrolls(true);
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 500, 150));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 440, 140));
 
         jPanel1.setBackground(new java.awt.Color(32, 98, 167));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Iniciar Sesión", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
@@ -145,6 +145,11 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 230, -1, -1));
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ec/edu/espe/images/facebook.png"))); // NOI18N
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 410, 60, 60));
 
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
@@ -152,6 +157,11 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 390, -1, -1));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ec/edu/espe/images/twitter.png"))); // NOI18N
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 410, 60, 60));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ec/edu/espe/images/fondoLogin.jpg"))); // NOI18N
@@ -163,6 +173,39 @@ public class Login extends javax.swing.JFrame {
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         validateUser();
     }//GEN-LAST:event_btnIngresarActionPerformed
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        try 
+        {
+            // Create Desktop object
+            Desktop d=Desktop.getDesktop();
+
+            // Browse a URL, for example www.facebook.com
+            d.browse(new URI("https://www.facebook.com/Hitch-Us-Ecuador-294623274237167/?ref=br_rs")); 
+            // This open facebook.com in your default browser.
+        }
+        catch(Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+                try 
+        {
+            // Create Desktop object
+            Desktop d=Desktop.getDesktop();
+
+            // Browse a URL, for example www.facebook.com
+            d.browse(new URI("https://twitter.com/HitchUs_Ecuador")); 
+            // This open facebook.com in your default browser.
+        }
+        catch(Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jLabel8MouseClicked
 
     /**
      * @param args the command line arguments

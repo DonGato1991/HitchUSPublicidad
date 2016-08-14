@@ -6,13 +6,14 @@
 package ec.edu.espe.models;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
  *
  * @author homer
  */
-public class DetalleCampania implements Serializable{
+public class DetalleCampania implements Serializable {
 
     private DetalleCampaniaPK detalleCampaniaPK;
     private BigInteger despliegues;
@@ -20,6 +21,8 @@ public class DetalleCampania implements Serializable{
     private String modoFacturacion;
     private Campania campania;
     private Elemento elemento;
+    private BigDecimal precioUnitario;
+
     public DetalleCampania() {
     }
 
@@ -78,4 +81,13 @@ public class DetalleCampania implements Serializable{
     public void setElemento(Elemento elemento) {
         this.elemento = elemento;
     }
+
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+    
 }

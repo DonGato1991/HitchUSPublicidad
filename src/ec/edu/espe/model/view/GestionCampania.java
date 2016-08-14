@@ -359,7 +359,6 @@ public class GestionCampania extends javax.swing.JInternalFrame {
             pk=cbxEmpresa.getItemAt(cbxEmpresa.getSelectedIndex());
             CampaniaPK pK=new CampaniaPK();
             pK.setRuc(pk.substring(pk.indexOf("-")+1,pk.length()));
-            pK.setSecCampania(1);
             Campania campania= new Campania();
             campania.setCampaniaPK(pK);
             campania.setNombre(txtNombre.getText());

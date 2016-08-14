@@ -26,6 +26,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +36,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -142,6 +144,14 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         txtLink = new javax.swing.JTextField();
         cbxPantalla = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtAreaPath = new javax.swing.JTextArea();
+        txtAreaPath.setLineWrap (true);
+        txtAreaPath.setLineWrap (true);
+        txtAreaPath.setWrapStyleWord(true);
+        txtAreaPath.setWrapStyleWord(true);
+        txtAreaPath.setEditable(false);
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -205,6 +215,11 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         cbxEmpresa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cbxEmpresaMouseClicked(evt);
+            }
+        });
+        cbxEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxEmpresaActionPerformed(evt);
             }
         });
 
@@ -273,6 +288,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jLabel4.setForeground(new java.awt.Color(32, 98, 167));
         jLabel4.setText("Banner de Publicidad");
 
+        lblPlataforma.setForeground(new java.awt.Color(51, 102, 255));
         lblPlataforma.setText("Imagen Banner");
 
         btnImagenUp.setForeground(new java.awt.Color(0, 153, 204));
@@ -287,6 +303,11 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
 
         cbxPosicion.setForeground(new java.awt.Color(0, 153, 204));
         cbxPosicion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione una...", "MOVIL", "WEB" }));
+        cbxPosicion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxPosicionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -356,6 +377,14 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jLabel12.setForeground(new java.awt.Color(32, 98, 167));
         jLabel12.setText("Posición Banner");
 
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(32, 98, 167));
+        jLabel13.setText("Path");
+
+        txtAreaPath.setColumns(20);
+        txtAreaPath.setRows(5);
+        jScrollPane3.setViewportView(txtAreaPath);
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -364,25 +393,35 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel13))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtLink)
-                    .addComponent(cbxPantalla, 0, 194, Short.MAX_VALUE))
+                    .addComponent(cbxPantalla, 0, 194, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addGap(32, 32, 32)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(cbxPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel13)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -443,11 +482,13 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1269, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -467,7 +508,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1281, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -544,8 +585,22 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
                 System.out.println("path:" + path);
                 elemento.setNombreImagen(rucEmpresaSel + "_" + campSel + "_" + targetSel + "_" + txtNombre.getText() + type);
                 elemento.setPath(path);//internamente el servidor le da localidad
+                if (!path.isEmpty()) {
+                    elementoRestClient.create_JSON(elemento);
+                    txtAreaPath.setText(path);
+                    JOptionPane.showMessageDialog(null, "Publicidad agregada exitosamente.");
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Lo sentimos, Se generó un problema al guardar la imágen.",
+                            "Error de carga",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }else{
+                                JOptionPane.showMessageDialog(null,
+                            "Lo sentimos, No puede guardar una publicidad sin la imágen.",
+                            "Error de carga",
+                            JOptionPane.ERROR_MESSAGE);
             }
-            elementoRestClient.create_JSON(elemento);
             /////
             List<Elemento> elementos = new ArrayList<>();
             Elemento tmp = new Elemento();
@@ -566,6 +621,9 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             detalleCampania.setDetalleCampaniaPK(detalleCampaniaPK);
             detalleCampania.setCampania(cbxCampania.getItemAt(cbxCampania.getSelectedIndex()));
             detalleCampania.setElemento(tmp);
+            detalleCampania.setDespliegues(BigInteger.ZERO);
+            detalleCampania.setClics(BigInteger.ZERO);
+            detalleCampania.setPrecioUnitario(new BigDecimal("45.00"));
             detalleCampaniaRestClient.create_JSON(detalleCampania);
             cargarDatos();
         } catch (Exception ex) {
@@ -601,6 +659,14 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnImagenUpActionPerformed
 
+    private void cbxPosicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxPosicionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxPosicionActionPerformed
+
+    private void cbxEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxEmpresaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxEmpresaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrear;
@@ -617,6 +683,7 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -631,8 +698,10 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblPlataforma;
+    private javax.swing.JTextArea txtAreaPath;
     private javax.swing.JTextField txtLink;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
@@ -749,8 +818,8 @@ public class GestionPublicidad extends javax.swing.JInternalFrame {
             ImageIO.write(image, type, bos);
             byte[] imageBytes = bos.toByteArray();
 
-            BASE64Encoder encoder = new BASE64Encoder();
-            imageString = encoder.encode(imageBytes);
+            Base64 encoder = new Base64();
+            imageString = encoder.encode(imageBytes).toString();
 
             bos.close();
         } catch (IOException e) {

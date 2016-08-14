@@ -77,7 +77,8 @@ public class ElementoRestClient {
     }
 
     public void create_XML(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML)
+                .post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
     public void create_JSON(Elemento requestEntity) throws ClientErrorException {
@@ -103,7 +104,9 @@ public class ElementoRestClient {
     }
 
     public String writeImage(Object requestEntity) throws ClientErrorException {
-        return webTarget.path("writeImage").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), String.class);
+        return webTarget.path("writeImage")
+                .request(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+         .post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), String.class);
     }
 
     public <T> T getElement_XML(Class<T> responseType) throws ClientErrorException {
